@@ -25,14 +25,14 @@ class FileOutput extends haxe.io.Output {
 	}
 
 	override public function writeBytes(s: haxe.io.Bytes, pos: Int, len: Int): Int {
-		var amount = Fs.writeSync(fd, Buffer.hxFromBytes(s), pos, len);
+		var amount = Fs.writeSync(fd, Buffer.hxFromBytes(s), pos, len, position);
 		position += len;
 		return amount;
 	}
 
 	public function seek(length: Int, pos: FileSeek)
 		switch pos {
-			case FileSeek.SeekBegin: position = 0;
+			case FileSeek.SeekBegin: position = length;
 			case FileSeek.SeekCur: position += length;
 			case FileSeek.SeekEnd:
 				throw 'Not implemented';

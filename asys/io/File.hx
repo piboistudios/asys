@@ -26,15 +26,21 @@ class File {
 		#end
 	}
 
-	public static function writeStream(path:String, binary:Bool = true, type:StreamType):RealSink {
+	public static function writeStream(path:String, binary:Bool = true, type:StreamType, pos:Int = 0):RealSink {
 		#if nodejs
 		return Sink.ofNodeStream('asys write stream', Fs.createWriteStream(path));
 		#else
-		return Sink.ofOutput('asys write stream', (switch (type) {
+		var output = (switch (type) {
 			case Update: sys.io.File.update;
 			case Append: sys.io.File.append;
 			default: sys.io.File.write;
-		})(path));
+		})(path);
+		if(pos > 0) {
+			output.seek(pos, FileSeek.Begin);
+		} else if(pos < 0) {
+			output.seek(-pos, FileSeek.End);
+		}
+		return Sink.ofOutput('asys write stream', output);
 		#end
 	}
 
