@@ -33,7 +33,7 @@ class File {
 		return Sink.ofOutput('asys write stream', (switch (type) {
 			case Update: sys.io.File.update;
 			case Append: sys.io.File.append;
-			default: sys.io.File.write
+			default: sys.io.File.write;
 		})(path));
 		#end
 	}
