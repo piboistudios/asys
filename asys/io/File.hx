@@ -11,7 +11,11 @@ import tink.io.Sink;
 using tink.io.Source;
 using tink.CoreApi;
 
-
+enum StreamType {
+	Update;
+	Append;
+	Write;
+}
 class File {
 
 	public static function readStream(path: String, binary = true): RealSource {
@@ -22,11 +26,15 @@ class File {
 		#end
 	}
 
-	public static function writeStream(path : String, binary: Bool = true): RealSink {
+	public static function writeStream(path : String, binary: Bool = true
+	#if !nodejs
+		, type:StreamType
+	#else
+	): RealSink {
 		#if nodejs
 		return Sink.ofNodeStream('asys write stream', Fs.createWriteStream(path));
 		#else
-		return Sink.ofOutput('asys write stream', sys.io.File.write(path));
+		return Sink.ofOutput('asys write stream', (switch(type){case Update: sys.io.File.update; case Append: sys.io.File.append; default: sys.io.File.write})(path));
 		#end
 	}
 	
