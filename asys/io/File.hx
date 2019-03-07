@@ -36,9 +36,9 @@ class File {
 			default: sys.io.File.write;
 		})(path);
 		if(pos > 0) {
-			output.seek(pos, FileSeek.Begin);
+			output.seek(pos, sys.io.FileSeek.SeekBegin);
 		} else if(pos < 0) {
-			output.seek(-pos, FileSeek.End);
+			output.seek(-pos, sys.io.FileSeek.SeekEnd);
 		}
 		return Sink.ofOutput('asys write stream', output);
 		#end
